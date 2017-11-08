@@ -4,10 +4,10 @@
       <br>
         <b-row class="mb-1 text-center">
           <b-col cols="3">
-            <b-form-input placeholder="№ Карты"></b-form-input>
+            <b-form-input v-model="input_find" placeholder="№ Карты"></b-form-input>
           </b-col>
           <b-col cols="1">
-            <b-button variant="primary">Найти</b-button>
+            <b-button variant="primary" @click="this.GetPatient">Найти</b-button>
           </b-col>
         </b-row>
         <b-row class="mb1 text-center">
@@ -19,14 +19,14 @@
             <!-- Tabs with card integration -->
             <!--<b-col class="mb-1 text-center">Вакцинация</b-col>-->
             <b-card no-body>
-              <b-col-md-4>
+              <!--<b-col-md-4>-->
                 <b-card>
-                <b>Ф.И.О:</b> <br>
-                <b>Паспорт:</b> <br>
-                <b>Дата рождения:</b> <br>
-                <b>Пол:</b>
+                <b> Ф.И.О: </b> {{Fio}}<br>
+                <b>Паспорт:</b> {{Pasport}}<br>
+                <b>Дата рождения:</b> {{DateRogd}} <br>
+                <b>Пол:</b> {{Pol}}
                 </b-card>
-              </b-col-md-4>
+              <!--</b-col-md-4>-->
               <b-tabs small card ref="tabs" v-model="tabIndex">
  <!--Дифтерия  Начало таблицы          -->
                 <b-tab title="Дифтерия">
@@ -105,6 +105,12 @@ export default {
   data () {
     return {
       items: [],
+      tabIndex: 0,
+      input_find: '',
+      Fio: '',
+      Pasport: '',
+      DateRogd: '',
+      Pol: '',
       msg: 'Welcome to Your Vue.js App',
       selected: null,
       options: [
@@ -129,18 +135,25 @@ export default {
     cancelAutoUpdate: function () {
       clearInterval(this.timer)
     },
-    GetModeVrach () {
+    GetPatient () {
+      const data = new FormData()
       var ss = this
-      axios.get('http://192.168.1.224:8082/get_mode', {responeType: 'application/json'})
+      data.append('patient', ss.input_find)
+      axios.post('http://192.168.1.76:8084/FindPatientInArena', data, {responeType: 'application/json'})
         .then(function (response) {
           var data = JSON.parse(JSON.stringify(response.data))
-          ss.items = data
-          console.log(ss.items)
-          ss.saveJSON(ss.items)
+//          ss.items = data
+//          console.log(ss.items)
+          ss.Fio = data[0].Fio
+          ss.Pasport = data[0].Pasport
+          ss.DateRogd = data[0].DateRogd
+          ss.Pol = data[0].Pol
+          console.log(ss.Fio)
+//          ss.saveJSON(ss.items)
         })
         .catch(function (error) {
           console.log(error)
-          ss.items = JSON.parse(localStorage.getItem('myObj'))
+//          ss.items = JSON.parse(localStorage.getItem('myObj'))
         })
     }
   }
