@@ -1,46 +1,94 @@
 <template>
   <div class="general">
-  <div class="container">
-    <div class="row">
-      <div class="col">
-        <b-button v-b-modal.modallg variant="primary">Добавить пациента</b-button>
-      </div>
-      </div>
-    <div class="row">
-  <div class="col">
-
-  </div>
-    </div>
-    </div>
-    <b-modal id="modallg" size="lg" title="Добавить пациента">
-      <b-container fluid>
+      <b-container>
+      <br>
         <b-row class="mb-1 text-center">
           <b-col cols="3">
             <b-form-input placeholder="№ Карты"></b-form-input>
           </b-col>
-          <b-col cols="8">
-            <b-form-input placeholder="Ф.И.О"></b-form-input>
-            </b-col>
-        </b-row>
-        <b-row class="mb1 text-center">
-            <b-col cols="4">
-              <b-form-input placeholder="Паспорт"></b-form-input>
-            </b-col>
-          <b-col cols="5">
-            <b-form-select v-model="selected" :options="options" class="mb-3">
-            </b-form-select>
+          <b-col cols="1">
+            <b-button variant="primary">Найти</b-button>
           </b-col>
-            <b-col cols="3">
-              <b-form-input type="date"></b-form-input>
-            </b-col>
         </b-row>
         <b-row class="mb1 text-center">
-          <b-col cols="8">
+        </b-row>
+
+        <b-row>
+          <b-col>
+
+            <!-- Tabs with card integration -->
+            <!--<b-col class="mb-1 text-center">Вакцинация</b-col>-->
+            <b-card no-body>
+              <b-col-md-4>
+                <b-card>
+                <b>Ф.И.О:</b> <br>
+                <b>Паспорт:</b> <br>
+                <b>Дата рождения:</b> <br>
+                <b>Пол:</b>
+                </b-card>
+              </b-col-md-4>
+              <b-tabs small card ref="tabs" v-model="tabIndex">
+ <!--Дифтерия  Начало таблицы          -->
+                <b-tab title="Дифтерия">
+                  <b-table striped hover
+                           :items="items"
+                           :fields="fieldsDift">
+                    <template slot="DATEPRIV" scope="data">
+                      {{data.item.DatePriv}}
+                    </template>
+                    <template slot="PREPARAT" scope="data">
+                      {{data.item.Preparat}}
+                    </template>
+                    <template slot="PRIVIVKI" scope="data">
+                      {{data.item.Privivki}}
+                    </template>
+                    <template slot="DOZA" scope="data">
+                      {{data.item.Doza}}
+                    </template>
+                    <template slot="MEDOTVOD" scope="data">
+                      {{data.item.MedOtvod}}
+                    </template>
+                  </b-table>
+   <!--Дифтерия  конец таблицы          -->
+                  <b-button variant="primary" size="sm" v-b-modal.ModalDifteria>Добавить</b-button>
+                  <b-modal id="ModalDifteria">
+                    <b-container>
+                      <b-row>Дата вакцинации: <b-col align-self="center"><b-input type="date"></b-input></b-col></b-row> <br />
+                      <b-row><b-input type="text" placeholder="Препарат"></b-input></b-row><br />
+                      <b-row><b-input type="text" placeholder="Прививки"></b-input></b-row><br />
+                      <b-row><b-input type="text" placeholder="Серия"></b-input></b-row><br />
+                      <b-row><b-input type="text" placeholder="Доза"></b-input></b-row><br />
+                      <b-row><b-input type="text" placeholder="Медотвод"></b-input></b-row>
+                    </b-container>
+                  </b-modal>
+                </b-tab>
+                <b-tab title="Кл. энцефалит">
+                  I'm the second tab
+                  <b-card>I'm the card in tab</b-card>
+                </b-tab>
+                <b-tab title="Корь">
+                  I'm the second tab
+                  <b-card>I'm the card in tab</b-card>
+                </b-tab>
+                <b-tab title="Краснуха">
+                  I'm the second tab
+                  <b-card>I'm the card in tab</b-card>
+                </b-tab>
+                <b-tab title="Гепатит В">
+                  I'm the second tab
+                  <b-card>I'm the card in tab</b-card>
+                </b-tab>
+                <b-tab title="Грипп">
+                  I'm the second tab
+                  <b-card>I'm the card in tab</b-card>
+                </b-tab>
+              </b-tabs>
+            </b-card>
 
           </b-col>
+
         </b-row>
       </b-container>
-    </b-modal>
   </div>
 </template>
 
@@ -49,13 +97,14 @@ import Vue from 'vue'
 import BootstrapVue from 'bootstrap-vue'
 import 'bootstrap/dist/css/bootstrap.css'
 import 'bootstrap-vue/dist/bootstrap-vue.css'
+import axios from 'axios'
 
 Vue.use(BootstrapVue)
-
 export default {
   name: 'general',
   data () {
     return {
+      items: [],
       msg: 'Welcome to Your Vue.js App',
       selected: null,
       options: [
@@ -63,7 +112,36 @@ export default {
         {value: 'a', text: 'УВД Ленинского района'},
         {value: 'b', text: 'УВД Кировского района'},
         {value: 'c', text: 'УВД Центрального района'}
-      ]
+      ],
+      fieldsDift: [
+        {key: 'DATEPRIV', label: 'Дата прививки', class: 'text-justify col-xs-8'},
+        {key: 'PREPARAT', label: 'Препарат', class: 'text-justify'},
+        {key: 'PRIVIVKI', label: 'Прививки', class: 'text-center'},
+        {key: 'SERIA', label: 'Серия', class: 'text-justify'},
+        {key: 'DOZA', label: 'Доза', class: 'text-center'},
+        {key: 'MEDOTVOD', label: 'Медотвод', class: 'text-center'}]
+    }
+  },
+  methods: {
+    startAutoUpdate: function () {
+      this.timer = setInterval(this.GetModeVrach, 600000)
+    },
+    cancelAutoUpdate: function () {
+      clearInterval(this.timer)
+    },
+    GetModeVrach () {
+      var ss = this
+      axios.get('http://192.168.1.224:8082/get_mode', {responeType: 'application/json'})
+        .then(function (response) {
+          var data = JSON.parse(JSON.stringify(response.data))
+          ss.items = data
+          console.log(ss.items)
+          ss.saveJSON(ss.items)
+        })
+        .catch(function (error) {
+          console.log(error)
+          ss.items = JSON.parse(localStorage.getItem('myObj'))
+        })
     }
   }
 }
