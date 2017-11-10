@@ -1,94 +1,6 @@
 <template>
-  <div class="general">
-    <b-container>
-      <br>
-      <b-row class="mb-1 text-center">
-        <b-col cols="3">
-          <b-form-input v-model="input_find" placeholder="№ Карты"></b-form-input>
-        </b-col>
-        <b-col cols="1">
-          <b-button variant="primary" @click="this.GetPatient">Найти</b-button>
-        </b-col>
-      </b-row>
-      <b-row class="mb1 text-center">
-      </b-row>
-
-      <b-row>
-        <b-col>
-
-          <!-- Tabs with card integration -->
-          <!--<b-col class="mb-1 text-center">Вакцинация</b-col>-->
-          <b-card no-body>
-            <!--<b-col-md-4>-->
-            <b-card>
-              <b> Ф.И.О: </b> {{Fio}}<br>
-              <b>Паспорт:</b> {{Pasport}}<br>
-              <b>Дата рождения:</b> {{DateRogd}} <br>
-              <b>Пол:</b> {{Pol}}
-            </b-card>
-            <!--</b-col-md-4>-->
-            <b-tabs small card ref="tabs" v-model="tabIndex">
-              <!--Дифтерия  Начало таблицы          -->
-              <b-tab title="Дифтерия">
-                <b-table striped hover
-                         :items="items"
-                         :fields="fieldsDift">
-                  <template slot="DATEPRIV" scope="data">
-                    {{data.item.DatePriv}}
-                  </template>
-                  <template slot="PREPARAT" scope="data">
-                    {{data.item.Preparat}}
-                  </template>
-                  <template slot="PRIVIVKI" scope="data">
-                    {{data.item.Privivki}}
-                  </template>
-                  <template slot="DOZA" scope="data">
-                    {{data.item.Doza}}
-                  </template>
-                  <template slot="MEDOTVOD" scope="data">
-                    {{data.item.MedOtvod}}
-                  </template>
-                </b-table>
-                <!--Дифтерия  конец таблицы          -->
-                <b-button variant="primary" size="sm" v-b-modal.ModalDifteria>Добавить</b-button>
-                <b-modal id="ModalDifteria">
-                  <b-container>
-                    <b-row>Дата вакцинации: <b-col align-self="center"><b-input type="date"></b-input></b-col></b-row> <br />
-                    <b-row><b-input type="text" placeholder="Препарат"></b-input></b-row><br />
-                    <b-row><b-input type="text" placeholder="Прививки"></b-input></b-row><br />
-                    <b-row><b-input type="text" placeholder="Серия"></b-input></b-row><br />
-                    <b-row><b-input type="text" placeholder="Доза"></b-input></b-row><br />
-                    <b-row><b-input type="text" placeholder="Медотвод"></b-input></b-row>
-                  </b-container>
-                </b-modal>
-              </b-tab>
-              <b-tab title="Кл. энцефалит">
-                I'm the second tab
-                <b-card>I'm the card in tab</b-card>
-              </b-tab>
-              <b-tab title="Корь">
-                I'm the second tab
-                <b-card>I'm the card in tab</b-card>
-              </b-tab>
-              <b-tab title="Краснуха">
-                I'm the second tab
-                <b-card>I'm the card in tab</b-card>
-              </b-tab>
-              <b-tab title="Гепатит В">
-                I'm the second tab
-                <b-card>I'm the card in tab</b-card>
-              </b-tab>
-              <b-tab title="Грипп">
-                I'm the second tab
-                <b-card>I'm the card in tab</b-card>
-              </b-tab>
-            </b-tabs>
-          </b-card>
-
-        </b-col>
-
-      </b-row>
-    </b-container>
+  <div id="general">
+    <input type="submit" value="login" v-on:click="login">
   </div>
 </template>
 
@@ -98,6 +10,8 @@
   import 'bootstrap/dist/css/bootstrap.css'
   import 'bootstrap-vue/dist/bootstrap-vue.css'
   import axios from 'axios'
+//  import router from 'vue-router'
+  import {Auth} from '../router/index.js'
 
   Vue.use(BootstrapVue)
   export default {
@@ -129,6 +43,9 @@
       }
     },
     methods: {
+      login: function () {
+        Auth.login()
+      },
       startAutoUpdate: function () {
         this.timer = setInterval(this.GetModeVrach, 600000)
       },
