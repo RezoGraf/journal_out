@@ -5,6 +5,7 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/gin-gonic/contrib/jwt"
 	"./auth"
+	"github.com/gin-contrib/cors"
 )
 
 var (
@@ -14,6 +15,7 @@ var (
 func main() {
 
 	router := gin.Default()
+	router.Use(cors.Default())
 
 	jwtGroup := router.Group("/jwt")
 	jwtGroup.Use(jwt.Auth(mysupersecretpassword))
