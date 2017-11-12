@@ -42,6 +42,9 @@
           {key: 'MEDOTVOD', label: 'Медотвод', class: 'text-center'}]
       }
     },
+    mounted: function () {
+      Auth.checkToken()
+    },
     methods: {
       login: function () {
         Auth.login()

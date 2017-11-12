@@ -139,7 +139,7 @@ export default {
       const data = new FormData()
       var ss = this
       data.append('patient', ss.input_find)
-      axios.post('http://192.168.1.76:8084/FindPatientInArena', data, {responeType: 'application/json'})
+      axios.post('http://localhost:8084/jwt/FindPatientInArena', data, {responeType: 'application/json'})
         .then(function (response) {
           var data = JSON.parse(JSON.stringify(response.data))
 //          ss.items = data
