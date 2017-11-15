@@ -1,6 +1,27 @@
 <template>
   <div id="general">
-    <input type="submit" value="login" v-on:click="login">
+    <b-container class="col-md-4">
+    <br />
+      <b-card>
+      <div class="text-center"> <h2>Вакцинация</h2></div>
+      <b-row class="my-1">
+        <b-col>
+          Введите имя пользователя и пароль
+          <b-form-input v-model="name" type="text" placeholder="Имя пользователя"></b-form-input>
+        </b-col>
+      </b-row>
+      <b-row class="my-1">
+        <b-col>
+          <b-form-input v-model="pass" type="text" placeholder="Пароль"></b-form-input>
+        </b-col>
+      </b-row>
+      <b-row class="my-1">
+        <b-col>
+          <b-button type="text" variant="primary" v-on:click="login">Вход</b-button>
+        </b-col>
+      </b-row>
+      </b-card>
+    </b-container>
   </div>
 </template>
 
@@ -18,28 +39,8 @@
     name: 'general',
     data () {
       return {
-        items: [],
-        tabIndex: 0,
-        input_find: '',
-        Fio: '',
-        Pasport: '',
-        DateRogd: '',
-        Pol: '',
-        msg: 'Welcome to Your Vue.js App',
-        selected: null,
-        options: [
-          {value: null, text: 'Кем выдан'},
-          {value: 'a', text: 'УВД Ленинского района'},
-          {value: 'b', text: 'УВД Кировского района'},
-          {value: 'c', text: 'УВД Центрального района'}
-        ],
-        fieldsDift: [
-          {key: 'DATEPRIV', label: 'Дата прививки', class: 'text-justify col-xs-8'},
-          {key: 'PREPARAT', label: 'Препарат', class: 'text-justify'},
-          {key: 'PRIVIVKI', label: 'Прививки', class: 'text-center'},
-          {key: 'SERIA', label: 'Серия', class: 'text-justify'},
-          {key: 'DOZA', label: 'Доза', class: 'text-center'},
-          {key: 'MEDOTVOD', label: 'Медотвод', class: 'text-center'}]
+        name: null,
+        pass: null
       }
     },
     mounted: function () {

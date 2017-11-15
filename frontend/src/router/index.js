@@ -9,35 +9,42 @@ Vue.use(Router)
 var Auth = {
   loggedIn: false,
   checkToken: function () {
+    var ss = this
     console.log(localStorage.getItem('token_vaccinations'))
     var token = localStorage.getItem('token_vaccinations')
     console.log(token)
     axios.defaults.headers.common['Authorization'] = 'Bearer ' + localStorage.getItem('token_vaccinations')
     axios.post('http://localhost:8084/jwt/checktoken')
       .then(function (response) {
-        // console.log(response.status)
-        // if (response.status === 200) {
-        //   router.push('vaccinations')
-        // }
+        console.log(response.status)
+        if (response.status === 200) {
+          ss.loggedIn = true
+          router.push('vaccinations')
+        }
       })
       .catch(function (error) {
         console.log(error)
       })
   },
   login: function () {
+    var ss = this
     axios.get('http://localhost:8084/login', {responeType: 'application/json'})
       .then(function (response) {
         var data = JSON.parse(JSON.stringify(response.data))
         console.log(data.token)
         localStorage.setItem('token_vaccinations', data.token)
-        this.loggedIn = true
+        ss.loggedIn = true
         router.push('vaccinations')
       })
       .catch(function (error) {
         console.log(error)
       })
   },
-  logout: function () { this.loggedIn = false }
+  logout: function () {
+    this.loggedIn = false
+    localStorage.removeItem('token_vaccinations')
+    router.push('login')
+  }
 }
 
 const router = new Router({

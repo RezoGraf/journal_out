@@ -2,12 +2,15 @@
   <div class="general">
       <b-container>
       <br>
-        <b-row class="mb-1 text-center">
+        <b-row class="mb-4 text-right">
           <b-col cols="3">
             <b-form-input v-model="input_find" placeholder="№ Карты"></b-form-input>
           </b-col>
           <b-col cols="1">
             <b-button variant="primary" @click="this.GetPatient">Найти</b-button>
+          </b-col>
+          <b-col md="8">
+            <b-button variant="primary" @click="this.logout">Выйти</b-button>
           </b-col>
         </b-row>
         <b-row class="mb1 text-center">
@@ -98,6 +101,7 @@ import BootstrapVue from 'bootstrap-vue'
 import 'bootstrap/dist/css/bootstrap.css'
 import 'bootstrap-vue/dist/bootstrap-vue.css'
 import axios from 'axios'
+import {Auth} from '../router/index.js'
 
 Vue.use(BootstrapVue)
 export default {
@@ -129,6 +133,9 @@ export default {
     }
   },
   methods: {
+    logout: function () {
+      Auth.logout()
+    },
     startAutoUpdate: function () {
       this.timer = setInterval(this.GetModeVrach, 600000)
     },
