@@ -14,7 +14,8 @@ type JwtClaims struct {
 }
 
 func Login(c *gin.Context) {
-	c.Header("Access-Control-Allow-Origin", "*")
+	//c.Header("Access-Control-Allow-Origin", "*")
+	
 	//TODO: create jwt token
 	token, err := createJwtToken()
 	fmt.Println(token)

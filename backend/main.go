@@ -15,7 +15,13 @@ var (
 func main() {
 
 	router := gin.Default()
-	router.Use(cors.Default())
+	router.Use(cors.New(cors.Config{
+		AllowAllOrigins: 	true,
+		AllowMethods: 		[]string{"PUT", "GET", "POST","OPTIONS", "PATH"},
+		AllowHeaders: 		[]string{"Origin", "Authorization"},
+		ExposeHeaders: 		[]string{"Content-Length", "Access-Control-Allow-Headers", "Access-Control-Request-Headers", "Access-Control-Request-Method"},
+		AllowCredentials: 	true,
+	}))
 
 	jwtGroup := router.Group("/jwt")
 	jwtGroup.Use(jwt.Auth(mysupersecretpassword))
@@ -23,10 +29,7 @@ func main() {
 	jwtGroup.GET("/main", controllers.MainJwt)
 	jwtGroup.POST("/FindPatientInArena", controllers.FindPatientInArena)
 	jwtGroup.POST("checktoken", controllers.CheckToken)
-	//router.Static("/", "./public")
-	//router.POST("/upload", controllers.Xmlparser)
-	//router.POST("/get_data", controllers.GetXlsxFile)
-	//router.GET( "/get_data", controllers.DownloadGetXlsxFile)
+
 
 	router.GET("/login", auth.Login)
 
