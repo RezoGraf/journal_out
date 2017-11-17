@@ -13,19 +13,16 @@ type JwtClaims struct {
 	jwt.StandardClaims
 }
 
-func Login(c *gin.Context) {
+func Login(c *gin.Context) string{
 	//c.Header("Access-Control-Allow-Origin", "*")
-	
+
 	//TODO: create jwt token
 	token, err := createJwtToken()
 	fmt.Println(token)
 	if err != nil {
 		log.Println("Error Creating JWT token", err)
 	}
-	c.JSON(200, gin.H{
-		"message": "You were logged in!",
-		"token": token,
-	})
+	return token
 }
 
 func createJwtToken() (string, error)  {

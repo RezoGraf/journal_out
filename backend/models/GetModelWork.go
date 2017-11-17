@@ -8,6 +8,8 @@ import (
 	"fmt"
 )
 
+const programname  = "vaccinations"
+
 type ModePatientFindOfArena struct {
 	Fio string `json:"Fio"`
 	Pasport string `json:"Pasport"`
@@ -15,7 +17,30 @@ type ModePatientFindOfArena struct {
 	Pol string `json:"Pol"`
 }
 
-func GetPatientOfArena(number_cart string) ([]*ModePatientFindOfArena)  {
+type CheckUser struct {
+	Count string
+}
+
+
+func ModelsAuth(name, pass string) []*CheckUser {
+	rows, err := db.Select(`SELECT count(*) FROM users WHERE login = $1 and pass = $2 and access_program = $3`,
+						name, pass, programname)
+	defer rows.Close()
+	if err != nil {
+		fmt.Println(err)
+	}
+	checkUser := make([]*CheckUser, 0)
+	for rows.Next() {
+		user := new(CheckUser)
+		var count sql.NullString
+		rows.Scan(&count)
+		user.Count = count.String
+		checkUser = append(checkUser, user)
+	}
+	return checkUser
+}
+
+func ModelsGetPatientOfArena(number_cart string) ([]*ModePatientFindOfArena)  {
 		fmt.Println(number_cart)
 		query := `select fam || ' ' || im || ' ' || OT as fio , pasp, DR, SEX from patient where UID = ?`
 		var Fio sql.NullString

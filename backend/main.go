@@ -4,7 +4,6 @@ import (
 	"./controllers"
 	"github.com/gin-gonic/gin"
 	"github.com/gin-gonic/contrib/jwt"
-	"./auth"
 	"github.com/gin-contrib/cors"
 )
 
@@ -31,7 +30,9 @@ func main() {
 	jwtGroup.POST("checktoken", controllers.CheckToken)
 
 
-	router.GET("/login", auth.Login)
+	router.POST("/login", func(c *gin.Context) {
+		go controllers.Auth(c)
+	})
 
 	router.Run(":8084")
 }
