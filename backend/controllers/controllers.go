@@ -6,16 +6,36 @@ import (
 	"../auth"
 	"fmt"
 	"net/http"
-	"github.com/gin-gonic/gin/render"
-	"context"
+	"github.com/dgrijalva/jwt-go"
 )
 
 func FindPatientInArena(c *gin.Context)  {
-	c.Writer.Header().Set("Access-Control-Allow-Origin", "*")
+
+	tokenString := c.GetHeader("Authorization")
+	fmt.Println("!", tokenString)
+
+
+
+	token, err := jwt.Parse(tokenString, func(token *jwt.Token) (interface{}, error) {
+		// Don't forget to validate the alg is what you expect:
+		if _, ok := token.Method.(*jwt.SigningMethodHMAC); !ok {
+			return nil, fmt.Errorf("Unexpected signing method: %v", token.Header["alg"])
+		}
+
+		// hmacSampleSecret is a []byte containing your secret, e.g. []byte("my_secret_key")
+		return []byte("mySecret"), nil
+	})
+
+	if claims, ok := token.Claims.(jwt.MapClaims); ok && token.Valid {
+		fmt.Println(claims["id"], claims["name"])
+	} else {
+		fmt.Println(err)
+	}
+
+	//c.Writer.Header().Set("Access-Control-Allow-Origin", "*")
 	//c.Writer.Header().Set("Content-Type", "application/json")
 	//c.Writer.Header().Set("Access-Control-Allow-Headers", "Content-Type, Content-Length, Accept-Encoding, X-CSRF-Token, Authorization")
 	a := c.PostForm("patient")
-	fmt.Println("controller ", a)
 	bks := models.ModelsGetPatientOfArena(a)
 	c.JSON(200, bks)
 
@@ -47,12 +67,11 @@ func CheckToken(c *gin.Context) {
 func Auth(c *gin.Context)  {
 	name := c.PostForm("name")
 	pass := c.PostForm("pass")
-	fmt.Println("!!!!", name, pass)
-	checkUser := models.ModelsAuth(name, pass)
-	fmt.Println(checkUser[0].Count)
+	checkUser := models.ModelsAuth(name, pass) //Проверка, есть ли пользователь в БД
 	if checkUser[0].Count == "1" {
-		fmt.Println(checkUser[0].Count)
-		token := auth.Login(c)
+
+		userInfo := models.ModelsGetUserInfo(name, pass)
+		token := auth.Login(c, userInfo) //Генерация jwt ключа пользователю
 		c.JSON(http.StatusOK, gin.H{
 			"message": "You were logged in!",
 			"token": token,

@@ -8,7 +8,7 @@ Vue.use(Router)
 
 var Auth = {
   loggedIn: false,
-  errauth: null,
+  errauth: false,
   checkToken: function () {
     var ss = this
     console.log(localStorage.getItem('token_vaccinations'))
@@ -35,18 +35,22 @@ var Auth = {
     console.log('!!!!!!!', dataform)
     axios.post('http://localhost:8084/login', dataform, {responeType: 'application/json'})
       .then(function (response) {
+        if (response.status === 403) {
+          console.log('status == 403')
+          alert('не верное имя пользователя или пароль')
+        }
         if (response.status === 200) {
           var data = JSON.parse(JSON.stringify(response.data))
           console.log(data.token)
           localStorage.setItem('token_vaccinations', data.token)
           ss.loggedIn = true
           router.replace('vaccinations')
-        } else {
-          ss.errauth = JSON.parse(JSON.stringify(response.data))
         }
       })
       .catch(function (error) {
+        alert('не верное имя пользователя или пароль')
         console.log(error)
+        ss.errauth = true
       })
   },
   logout: function () {

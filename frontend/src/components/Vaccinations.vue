@@ -150,7 +150,7 @@ export default {
       const data = new FormData()
       var ss = this
       data.append('patient', ss.input_find)
-      axios.defaults.headers.common['Authorization'] = 'Bearer ' + localStorage.getItem('token_vaccinations')
+      axios.defaults.headers.common['Authorization'] = localStorage.getItem('token_vaccinations')
       axios.post('http://localhost:8084/jwt/FindPatientInArena', data, {responeType: 'application/json'})
         .then(function (response) {
           var data = JSON.parse(JSON.stringify(response.data))

@@ -30,9 +30,7 @@ func main() {
 	jwtGroup.POST("checktoken", controllers.CheckToken)
 
 
-	router.POST("/login", func(c *gin.Context) {
-		go controllers.Auth(c)
-	})
+	router.POST("/login", controllers.Auth)
 
 	router.Run(":8084")
 }

@@ -1,6 +1,6 @@
 <template>
   <div id="general">
-    <b-container class="col-md-2">
+    <b-container class="col-md-3">
     <br />
       <b-card>
       <div class="text-center"> <h2>Вакцинация</h2></div>
@@ -12,7 +12,7 @@
       </b-row>
       <b-row class="my-1">
         <b-col>
-          <b-form-input v-model="pass" type="text" placeholder="Пароль"></b-form-input>
+          <b-form-input v-model="pass" type="password" v-on:keyup.enter="console.log('12312312')" placeholder="Пароль"></b-form-input>
         </b-col>
       </b-row>
       <b-row class="my-1">
@@ -21,7 +21,7 @@
         </b-col>
       </b-row>
       </b-card>
-      {{errauth}}
+      <!--<b-alert v-if="this.errauth" variant="success" show>Success Alert</b-alert>-->
     </b-container>
   </div>
 </template>
@@ -38,11 +38,11 @@
   Vue.use(BootstrapVue)
   export default {
     name: 'general',
-    data () {
+    data: function () {
       return {
         name: null,
         pass: null,
-        errauth: null
+        errauth: false
       }
     },
     mounted: function () {
@@ -50,8 +50,10 @@
     },
     methods: {
       login: function () {
-        this.errauth = Auth.errauth
         Auth.login(this.name, this.pass)
+        if (Auth.errauth) {
+          this.errauth = true
+        }
       },
       startAutoUpdate: function () {
         this.timer = setInterval(this.GetModeVrach, 600000)

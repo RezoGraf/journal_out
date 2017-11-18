@@ -3,7 +3,7 @@ package db
 import (
 	"database/sql"
 	"log"
-	//_ "github.com/nakagami/firebirdsql"
+	_ "github.com/nakagami/firebirdsql"
 	_ "github.com/lib/pq"
 	//"../utils"
 	"os"
@@ -12,24 +12,23 @@ import (
 
 //var connection = utils.LoadConfiguration("config.json")
 
-func db() (*sql.DB, error) {
+func db(database string) (*sql.DB, error) {
 	var db *sql.DB
 	var err error
-	//fmt.Println("!!!", connection.Database.Username)
-	//if database == "firebirdsl" {
-	//
-	//	db, err = sql.Open("firebirdsql", "sysdba:masterkey@192.168.1.1:3050/D:/Arena/DB/ARENA.GDB")
-	//	if err != nil {
-	//		log.Fatal(err)
-	//		os.Exit(1)
-	//	}
-	//	if err = db.Ping(); err != nil {
-	//		log.Fatal(err)
-	//		os.Exit(0)
-	//	}
-	//	return db, err
-	//}
-	//if database == "postgres" {
+	if database == "firebirdsl" {
+		fmt.Println("is Method firebirdsql query db")
+		db, err = sql.Open("firebirdsql", "sysdba:masterkey@192.168.1.1:3050/D:/Arena/DB/ARENA.GDB")
+		if err != nil {
+			log.Fatal(err)
+			os.Exit(1)
+		}
+		if err = db.Ping(); err != nil {
+			log.Fatal(err)
+			os.Exit(0)
+		}
+		return db, err
+	}
+	if database == "postgres" {
 		fmt.Println("is Method postgresql query db")
 		db, err = sql.Open("postgres", "postgres://pguser:pg137784!@192.168.1.222:5432/mis")
 		if err != nil {
@@ -41,13 +40,16 @@ func db() (*sql.DB, error) {
 			os.Exit(0)
 		}
 		return db, err
-	//}
+	}
 
 	return db, err
 }
 
-func Select(Query string, Args ...interface{}) (*sql.Rows, error) {
-	db, _ := db()
+func Select(database string, Query string, Args ...interface{}) (*sql.Rows, error) {
+	db, err := db(database)
+	if err != nil {
+		log.Fatal(err)
+	}
 	rows, err := db.Query(Query, Args...)
 	fmt.Println(Args)
 	if(err != nil){

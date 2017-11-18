@@ -2,28 +2,58 @@ package models
 
 import (
 	"database/sql"
-	_ "github.com/nakagami/firebirdsql"
 	"../db"
 	"../utils"
 	"fmt"
+	"log"
 )
 
 const programname  = "vaccinations"
 
+type ModelUser struct {
+	Id  string 		`json:"id"`
+	Fam string 		`json:"fam"`
+	Im  string 		`json:"im"`
+	Ot  string 		`json:"ot"'`
+}
+
 type ModePatientFindOfArena struct {
-	Fio string `json:"Fio"`
-	Pasport string `json:"Pasport"`
-	DateRogd string `json:"DateRogd"`
-	Pol string `json:"Pol"`
+	Fio 		string 	`json:"Fio"`
+	Pasport		string 	`json:"Pasport"`
+	DateRogd 	string 	`json:"DateRogd"`
+	Pol 		string 	`json:"Pol"`
 }
 
 type CheckUser struct {
 	Count string
 }
 
+func ModelsGetUserInfo(name, pass string) []*ModelUser  {
+	rows, err := db.Select("postgres", `SELECT id, fam, im, ot FROM users WHERE login = $1 and pass = $2 and access_program = $3`,
+		name, pass, programname)
+	defer rows.Close()
+	if err != nil {
+		fmt.Println(err)
+	}
+	AuthUser := make([]*ModelUser, 0)
+	for rows.Next() {
+		user := new(ModelUser)
+		var id  sql.NullString
+		var fam sql.NullString
+		var im  sql.NullString
+		var ot	sql.NullString
+		rows.Scan(&id, &fam, &im, &ot)
+		user.Id   = id.String
+		user.Fam  = fam.String
+		user.Im   = im.String
+		user.Ot   = ot.String
+		AuthUser = append(AuthUser, user)
+	}
+	return AuthUser
+}
 
 func ModelsAuth(name, pass string) []*CheckUser {
-	rows, err := db.Select(`SELECT count(*) FROM users WHERE login = $1 and pass = $2 and access_program = $3`,
+	rows, err := db.Select("postgres", `SELECT count(*) FROM users WHERE login = $1 and pass = $2 and access_program = $3`,
 						name, pass, programname)
 	defer rows.Close()
 	if err != nil {
@@ -49,7 +79,11 @@ func ModelsGetPatientOfArena(number_cart string) ([]*ModePatientFindOfArena)  {
 		var Pol sql.NullString
 
 
-	    rows, _ := db.Select(query, number_cart)
+	    rows, err := db.Select("firebirdsl", query, number_cart)
+	    if err != nil {
+	    	log.Fatal(err)
+		}
+	    defer rows.Close()
 		bks := make([]*ModePatientFindOfArena, 0)
 
 		for rows.Next() {
