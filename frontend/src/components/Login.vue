@@ -1,6 +1,6 @@
 <template>
   <div id="general">
-    <b-container class="col-md-4">
+    <b-container class="col-md-2">
     <br />
       <b-card>
       <div class="text-center"> <h2>Вакцинация</h2></div>
@@ -21,6 +21,7 @@
         </b-col>
       </b-row>
       </b-card>
+      {{errauth}}
     </b-container>
   </div>
 </template>
@@ -40,7 +41,8 @@
     data () {
       return {
         name: null,
-        pass: null
+        pass: null,
+        errauth: null
       }
     },
     mounted: function () {
@@ -48,7 +50,8 @@
     },
     methods: {
       login: function () {
-        Auth.login()
+        this.errauth = Auth.errauth
+        Auth.login(this.name, this.pass)
       },
       startAutoUpdate: function () {
         this.timer = setInterval(this.GetModeVrach, 600000)

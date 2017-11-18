@@ -8,6 +8,7 @@ Vue.use(Router)
 
 var Auth = {
   loggedIn: false,
+  errauth: null,
   checkToken: function () {
     var ss = this
     console.log(localStorage.getItem('token_vaccinations'))
@@ -26,15 +27,23 @@ var Auth = {
         console.log(error)
       })
   },
-  login: function () {
+  login: function (name, pass) {
     var ss = this
-    axios.get('http://localhost:8084/login', {responeType: 'application/json'})
+    const dataform = new FormData()
+    dataform.append('name', name)
+    dataform.append('pass', pass)
+    console.log('!!!!!!!', dataform)
+    axios.post('http://localhost:8084/login', dataform, {responeType: 'application/json'})
       .then(function (response) {
-        var data = JSON.parse(JSON.stringify(response.data))
-        console.log(data.token)
-        localStorage.setItem('token_vaccinations', data.token)
-        ss.loggedIn = true
-        router.push('vaccinations')
+        if (response.status === 200) {
+          var data = JSON.parse(JSON.stringify(response.data))
+          console.log(data.token)
+          localStorage.setItem('token_vaccinations', data.token)
+          ss.loggedIn = true
+          router.replace('vaccinations')
+        } else {
+          ss.errauth = JSON.parse(JSON.stringify(response.data))
+        }
       })
       .catch(function (error) {
         console.log(error)
@@ -44,6 +53,9 @@ var Auth = {
     this.loggedIn = false
     localStorage.removeItem('token_vaccinations')
     router.push('login')
+  },
+  refresh: function () {
+    router.refresh('vaccinations')
   }
 }
 
