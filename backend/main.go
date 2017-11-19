@@ -29,8 +29,10 @@ func main() {
 	jwtGroup.POST("/FindPatientInArena", controllers.FindPatientInArena)
 	jwtGroup.POST("checktoken", controllers.CheckToken)
 
+	jwtGroup.GET("encodeJwt", controllers.GetCurentUser)
+
 
 	router.POST("/login", controllers.Auth)
-
+	router.Use(gin.Logger())
 	router.Run(":8084")
 }

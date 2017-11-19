@@ -10,6 +10,7 @@
             <b-button variant="primary" @click="this.GetPatient">Найти</b-button>
           </b-col>
           <b-col md="8">
+            {{nameUser.name}} &nbsp;
             <b-button variant="primary" @click="this.logout">Выйти</b-button>
           </b-col>
         </b-row>
@@ -102,12 +103,14 @@ import 'bootstrap/dist/css/bootstrap.css'
 import 'bootstrap-vue/dist/bootstrap-vue.css'
 import axios from 'axios'
 import {Auth} from '../router/index.js'
+import * as controllers from '../../controllers/Controllers.js'
 
 Vue.use(BootstrapVue)
 export default {
   name: 'general',
   data () {
     return {
+      nameUser: [],
       items: [],
       tabIndex: 0,
       input_find: '',
@@ -117,12 +120,6 @@ export default {
       Pol: '',
       msg: 'Welcome to Your Vue.js App',
       selected: null,
-      options: [
-        {value: null, text: 'Кем выдан'},
-        {value: 'a', text: 'УВД Ленинского района'},
-        {value: 'b', text: 'УВД Кировского района'},
-        {value: 'c', text: 'УВД Центрального района'}
-      ],
       fieldsDift: [
         {key: 'DATEPRIV', label: 'Дата прививки', class: 'text-justify col-xs-8'},
         {key: 'PREPARAT', label: 'Препарат', class: 'text-justify'},
@@ -133,11 +130,19 @@ export default {
     }
   },
   mounted: function () {
-//    Auth.refresh()
+    this.CurrentUser()
   },
   methods: {
     logout: function () {
       Auth.logout()
+    },
+    CurrentUser: function () {
+      var ss = this
+      controllers.GetCurrentUser().then(function (response) {
+        ss.nameUser = JSON.parse(JSON.stringify(response.data))
+      }).catch(function (error) {
+        console.log(error)
+      })
     },
     startAutoUpdate: function () {
       this.timer = setInterval(this.GetModeVrach, 600000)
@@ -154,18 +159,14 @@ export default {
       axios.post('http://localhost:8084/jwt/FindPatientInArena', data, {responeType: 'application/json'})
         .then(function (response) {
           var data = JSON.parse(JSON.stringify(response.data))
-//          ss.items = data
-//          console.log(ss.items)
           ss.Fio = data[0].Fio
           ss.Pasport = data[0].Pasport
           ss.DateRogd = data[0].DateRogd
           ss.Pol = data[0].Pol
           console.log(ss.Fio)
-//          ss.saveJSON(ss.items)
         })
         .catch(function (error) {
           console.log(error)
-//          ss.items = JSON.parse(localStorage.getItem('myObj'))
         })
     }
   }

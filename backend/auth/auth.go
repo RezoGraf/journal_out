@@ -9,6 +9,8 @@ import (
 	"fmt"
 )
 
+const JwtTocken  = "mySecret"
+
 type JwtClaims struct {
 	Id 			string	  `json:"id"`
 	Name        string    `json:"name"`
@@ -41,7 +43,7 @@ func createJwtToken(id, fam, im, ot string) (string, error)  {
 	}
 
 	rawToken := jwt.NewWithClaims(jwt.SigningMethodHS512, claims)
-	token, err := rawToken.SignedString([]byte("mySecret"))
+	token, err := rawToken.SignedString([]byte(JwtTocken))
 	if err != nil {
 		return "", err
 	}
