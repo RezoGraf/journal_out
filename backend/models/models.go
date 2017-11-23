@@ -6,6 +6,7 @@ import (
 	"../utils"
 	"fmt"
 	"log"
+	"github.com/lib/pq"
 )
 
 const programname  = "vaccinations"
@@ -24,8 +25,25 @@ type ModePatientFindOfArena struct {
 	Pol 		string 	`json:"Pol"`
 }
 
+type ModelAddPrivivka struct {
+	userId		string
+	vaccination string
+	data		pq.NullTime
+	preparat	string
+	seria		string
+	doza		string
+	numberkart	string
+}
+
 type CheckUser struct {
 	Count string
+}
+
+func ModelsAddPrivivka(userId, vaccination, date, preparat, seria, doza, numberkart string) {
+	db.Exec(`INSERT INTO vac_vaccinations (vrach_id, type_vraccinations, date, preparat, seria, doza, numberkart
+	VALUES $1, $2, $3::timestamp, $4, $5, $6, $7)`,
+		utils.NullableInt(userId), utils.NullableString(vaccination), utils.NullableTime(date), utils.NullableString(preparat),
+			utils.NullableString(seria), utils.NullableString(doza), utils.NullableInt(numberkart))
 }
 
 func ModelsGetUserInfo(name, pass string) []*ModelUser  {

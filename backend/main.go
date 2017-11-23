@@ -31,6 +31,8 @@ func main() {
 
 	jwtGroup.GET("encodeJwt", controllers.GetCurentUser)
 
+	jwtGroup.POST("addPrivivka", controllers.AddPrivivka)
+
 
 	router.POST("/login", controllers.Auth)
 	router.Use(gin.Logger())

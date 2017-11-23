@@ -33,7 +33,9 @@
               <!--</b-col-md-4>-->
               <b-tabs small card ref="tabs" v-model="tabIndex">
  <!--Дифтерия  Начало таблицы          -->
-                <b-tab title="Дифтерия">
+                <b-tab title="Дифтерия"
+                  :title-link-class="linkClass(0)"
+                >
                   <b-table striped hover
                            :items="items"
                            :fields="fieldsDift">
@@ -55,14 +57,22 @@
                   </b-table>
    <!--Дифтерия  конец таблицы          -->
                   <b-button variant="primary" size="sm" v-b-modal.ModalDifteria>Добавить</b-button>
-                  <b-modal id="ModalDifteria">
+                  <b-modal id="ModalDifteria"
+                     title="Добавить прививку от дефтерии "
+                           @ok="addPrivivkaDEFTERIA">
                     <b-container>
-                      <b-row>Дата вакцинации: <b-col align-self="center"><b-input type="date"></b-input></b-col></b-row> <br />
-                      <b-row><b-input type="text" placeholder="Препарат"></b-input></b-row><br />
-                      <b-row><b-input type="text" placeholder="Прививки"></b-input></b-row><br />
-                      <b-row><b-input type="text" placeholder="Серия"></b-input></b-row><br />
-                      <b-row><b-input type="text" placeholder="Доза"></b-input></b-row><br />
-                      <b-row><b-input type="text" placeholder="Медотвод"></b-input></b-row>
+                      <b-row>Дата вакцинации: <b-col align-self="center"><b-input v-model="selectedDateDEFTERIA" type="date"></b-input></b-col></b-row> <br />
+                      <b-row>
+                        <b-form-select v-model="selectedPreparatDEFTERIA" :options="optionsPreparatsDEFTERIA"></b-form-select>
+                      </b-row><br />
+                      <!--<b-row><b-input type="text" placeholder="Прививки"></b-input></b-row><br />-->
+                      <b-row>
+                        <b-form-select v-model="selectedSeriaDEFTERIA" :options="optionsSeriaDEFTERIA"></b-form-select>
+                      </b-row><br />
+                      <b-row>
+                        <b-form-select v-model="selectedDozaDEFTERIA" :options="optionsDozaDEFTERIA"></b-form-select>
+                      </b-row><br />
+                      <!--<b-row><b-input type="text" placeholder="Медотвод"></b-input></b-row>-->
                     </b-container>
                   </b-modal>
                 </b-tab>
@@ -110,16 +120,34 @@ export default {
   name: 'general',
   data () {
     return {
+      itemsDEFTERIA: [],
+      selectedDateDEFTERIA: null,
+      selectedPreparatDEFTERIA: null,
+      selectedSeriaDEFTERIA: null,
+      selectedDozaDEFTERIA: null,
       nameUser: [],
       items: [],
       tabIndex: 0,
       input_find: '',
+      NumberKart: '',
       Fio: '',
       Pasport: '',
       DateRogd: '',
       Pol: '',
-      msg: 'Welcome to Your Vue.js App',
       selected: null,
+      optionsPreparatsDEFTERIA: [
+        {value: null, text: 'наименование препарата'},
+        {value: 'АДСМ', text: 'АДСМ'}
+      ],
+      optionsSeriaDEFTERIA: [
+        {value: null, text: 'серия препарата'},
+        {value: 'П7', text: 'П7'},
+        {value: 'П28', text: 'П28'}
+      ],
+      optionsDozaDEFTERIA: [
+        {value: null, text: 'доза'},
+        {value: '0.5', text: '0.5'}
+      ],
       fieldsDift: [
         {key: 'DATEPRIV', label: 'Дата прививки', class: 'text-justify col-xs-8'},
         {key: 'PREPARAT', label: 'Препарат', class: 'text-justify'},
@@ -136,12 +164,33 @@ export default {
     logout: function () {
       Auth.logout()
     },
+    linkClass (idx) {
+      this.setItemsDefaultVACCINATIONS(idx)
+    },
+    setItemsDefaultVACCINATIONS (idx) {
+      controllers.setItemsDefaultVACCINATIONS(idx)
+    },
     CurrentUser: function () {
       var ss = this
       controllers.GetCurrentUser().then(function (response) {
         ss.nameUser = JSON.parse(JSON.stringify(response.data))
       }).catch(function (error) {
         console.log(error)
+      })
+    },
+    addPrivivkaDEFTERIA: function () {
+      controllers.addPrivika('АДСМ',
+        this.selectedDateDEFTERIA,
+        this.selectedPreparatDEFTERIA,
+        this.selectedSeriaDEFTERIA,
+        this.selectedDozaDEFTERIA,
+        this.NumberKart
+      ).then(function (response) {
+        if (response.status === '200') {
+
+        } else {
+          alert('Произошла ошибка, свяжитесь с системным администратором ' + response.statusText)
+        }
       })
     },
     startAutoUpdate: function () {
@@ -159,6 +208,7 @@ export default {
       axios.post('http://localhost:8084/jwt/FindPatientInArena', data, {responeType: 'application/json'})
         .then(function (response) {
           var data = JSON.parse(JSON.stringify(response.data))
+          ss.NumberKart = data[0].NumberKart
           ss.Fio = data[0].Fio
           ss.Pasport = data[0].Pasport
           ss.DateRogd = data[0].DateRogd

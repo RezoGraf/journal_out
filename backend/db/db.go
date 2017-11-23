@@ -86,38 +86,38 @@ func Select(database string, Query string, Args ...interface{}) (*sql.Rows, erro
 //}
 
 
-//func Exec(Query string, Args ...interface{}) {
-//	db, errdb := db()
-//
-//	//fmt.Println(Args...)
-//	//fmt.Println(Query)
-//	if errdb !=nil {
-//		fmt.Println(Args...)
-//		fmt.Println(Query)
-//		log.Fatal(errdb)
-//		os.Exit(1)
-//	}
-//	tx, txerr := db.Begin()
-//	if txerr == nil {
-//		_ , reserr := tx.Exec(Query, Args...)
-//		if reserr == nil {
-//			tx.Commit()
-//		} else {
-//			// Обрабатываем ошибку команды reserr
-//			fmt.Println(Args...)
-//			fmt.Println(Query)
-//			tx.Rollback()
-//			fmt.Println(reserr)
-//			os.Exit(1)
-//
-//		}
-//	} else {
-//		fmt.Println(txerr)
-//		// Тут обрабатываем ошибку создания транзакции txerr
-//		os.Exit(1)
-//	}
-//	db.Close()
-//}
+func Exec(Query string, Args ...interface{}) {
+	db, errdb := db("postgres")
+
+	//fmt.Println(Args...)
+	//fmt.Println(Query)
+	if errdb !=nil {
+		fmt.Println(Args...)
+		fmt.Println(Query)
+		log.Fatal(errdb)
+		os.Exit(1)
+	}
+	tx, txerr := db.Begin()
+	if txerr == nil {
+		_ , reserr := tx.Exec(Query, Args...)
+		if reserr == nil {
+			tx.Commit()
+		} else {
+			// Обрабатываем ошибку команды reserr
+			fmt.Println(Args...)
+			fmt.Println(Query)
+			tx.Rollback()
+			fmt.Println(reserr)
+			os.Exit(1)
+
+		}
+	} else {
+		fmt.Println(txerr)
+		// Тут обрабатываем ошибку создания транзакции txerr
+		os.Exit(1)
+	}
+	db.Close()
+}
 //func ExecReturValue(Query string, Args ...interface{}) ( id int) {
 //	db, errdb := db()
 //	//fmt.Println(Args...)
