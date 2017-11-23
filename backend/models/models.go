@@ -23,6 +23,7 @@ type ModePatientFindOfArena struct {
 	Pasport		string 	`json:"Pasport"`
 	DateRogd 	string 	`json:"DateRogd"`
 	Pol 		string 	`json:"Pol"`
+	Uid 		string 	`json:"NumberKart"`
 }
 
 type ModelAddPrivivka struct {
@@ -40,8 +41,8 @@ type CheckUser struct {
 }
 
 func ModelsAddPrivivka(userId, vaccination, date, preparat, seria, doza, numberkart string) {
-	db.Exec(`INSERT INTO vac_vaccinations (vrach_id, type_vraccinations, date, preparat, seria, doza, numberkart
-	VALUES $1, $2, $3::timestamp, $4, $5, $6, $7)`,
+	db.Exec(`INSERT INTO vac_vaccinations (vrach_id, type_vaccinations, date, preparat, seria, doza, numberkart)
+	VALUES ($1, $2, $3::timestamp, $4, $5, $6, $7)`,
 		utils.NullableInt(userId), utils.NullableString(vaccination), utils.NullableTime(date), utils.NullableString(preparat),
 			utils.NullableString(seria), utils.NullableString(doza), utils.NullableInt(numberkart))
 }
@@ -90,11 +91,12 @@ func ModelsAuth(name, pass string) []*CheckUser {
 
 func ModelsGetPatientOfArena(number_cart string) ([]*ModePatientFindOfArena)  {
 		fmt.Println(number_cart)
-		query := `select fam || ' ' || im || ' ' || OT as fio , pasp, DR, SEX from patient where UID = ?`
+		query := `select fam || ' ' || im || ' ' || OT as fio , pasp, DR, SEX, uid from patient where UID = ?`
 		var Fio sql.NullString
 		var Pasport sql.NullString
 		var DateRogd sql.NullString
 		var Pol sql.NullString
+		var Uid sql.NullString
 
 
 	    rows, err := db.Select("firebirdsl", query, number_cart)
@@ -106,11 +108,12 @@ func ModelsGetPatientOfArena(number_cart string) ([]*ModePatientFindOfArena)  {
 
 		for rows.Next() {
 				bk := new(ModePatientFindOfArena)
-				rows.Scan(&Fio, &Pasport, &DateRogd, &Pol)
+				rows.Scan(&Fio, &Pasport, &DateRogd, &Pol, &Uid)
 				bk.Fio = Fio.String
 				bk.Pasport = Pasport.String
 				bk.DateRogd = utils.Cut(DateRogd.String, 0, 10)
 				bk.Pol = Pol.String
+				bk.Uid = Uid.String
 
 				bks = append(bks, bk)
 			}

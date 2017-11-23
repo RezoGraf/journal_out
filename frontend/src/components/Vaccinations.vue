@@ -33,9 +33,7 @@
               <!--</b-col-md-4>-->
               <b-tabs small card ref="tabs" v-model="tabIndex">
  <!--Дифтерия  Начало таблицы          -->
-                <b-tab title="Дифтерия"
-                  :title-link-class="linkClass(0)"
-                >
+                <b-tab title="Дифтерия">
                   <b-table striped hover
                            :items="items"
                            :fields="fieldsDift">
@@ -76,7 +74,7 @@
                     </b-container>
                   </b-modal>
                 </b-tab>
-                <b-tab title="Кл. энцефалит">
+                <b-tab title="Кл. энцефалит" @click="currentTab(1)">
                   I'm the second tab
                   <b-card>I'm the card in tab</b-card>
                 </b-tab>
@@ -164,11 +162,12 @@ export default {
     logout: function () {
       Auth.logout()
     },
-    linkClass (idx) {
+    currentTab: function (idx) {
       this.setItemsDefaultVACCINATIONS(idx)
     },
     setItemsDefaultVACCINATIONS (idx) {
-      controllers.setItemsDefaultVACCINATIONS(idx)
+//      controllers.setItemsDefaultVACCINATIONS(idx)
+      console.log(idx)
     },
     CurrentUser: function () {
       var ss = this
@@ -186,11 +185,14 @@ export default {
         this.selectedDozaDEFTERIA,
         this.NumberKart
       ).then(function (response) {
-        if (response.status === '200') {
+        if (response.status === 200) {
 
-        } else {
-          alert('Произошла ошибка, свяжитесь с системным администратором ' + response.statusText)
         }
+        if (response.status === 404) {
+
+        }
+      }).catch(function (error) {
+        alert('Произошла ошибка, свяжитесь с системным администратором ' + error)
       })
     },
     startAutoUpdate: function () {
@@ -213,7 +215,6 @@ export default {
           ss.Pasport = data[0].Pasport
           ss.DateRogd = data[0].DateRogd
           ss.Pol = data[0].Pol
-          console.log(ss.Fio)
         })
         .catch(function (error) {
           console.log(error)

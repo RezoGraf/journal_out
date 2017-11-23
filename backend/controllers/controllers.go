@@ -52,13 +52,13 @@ func Auth(c *gin.Context)  {
 
 func AddPrivivka(c *gin.Context)  {
 	encodeuser := auth.EncodeJwt(c)
-	userId := 	 encodeuser["id"]
+	userId := 	 encodeuser["id"].(string)
 	vaccination  := c.PostForm("vaccination")
 	date		 := c.PostForm("date")
 	preparat	 := c.PostForm("preparat")
 	seria 		 := c.PostForm("seria")
 	doza 		 := c.PostForm("doza")
-	numberkart 	 := c.PostForm("nubercart")
+	numberkart 	 := c.PostForm("numberkart")
 
 	models.ModelsAddPrivivka(userId, vaccination, date, preparat, seria, doza, numberkart)
 }
