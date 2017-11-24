@@ -61,5 +61,14 @@ func AddPrivivka(c *gin.Context)  {
 	numberkart 	 := c.PostForm("numberkart")
 
 	models.ModelsAddPrivivka(userId, vaccination, date, preparat, seria, doza, numberkart)
+	c.JSON(200, "ok")
+}
+
+func GetPrivivka(c *gin.Context)  {
+	type_vaccination := c.PostForm("type_vaccination")
+	numberKart := c.PostForm("numberKart")
+	fmt.Println(type_vaccination, "!!!! ", numberKart)
+	bks := models.ModelsGetPrivivka(type_vaccination, numberKart)
+	c.JSON(200, bks)
 }
 

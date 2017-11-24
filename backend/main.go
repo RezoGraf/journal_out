@@ -33,6 +33,8 @@ func main() {
 
 	jwtGroup.POST("addPrivivka", controllers.AddPrivivka)
 
+	jwtGroup.POST("getPrivivka", controllers.GetPrivivka)
+
 
 	router.POST("/login", controllers.Auth)
 	router.Use(gin.Logger())

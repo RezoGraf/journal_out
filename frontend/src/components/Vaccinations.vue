@@ -7,7 +7,7 @@
             <b-form-input v-model="input_find" placeholder="№ Карты"></b-form-input>
           </b-col>
           <b-col cols="1">
-            <b-button variant="primary" @click="this.GetPatient">Найти</b-button>
+            <b-button variant="primary" @click="this.GetPatient" :disabled="this.input_find == ''">Найти</b-button>
           </b-col>
           <b-col md="8">
             {{nameUser.name}} &nbsp;
@@ -33,28 +33,25 @@
               <!--</b-col-md-4>-->
               <b-tabs small card ref="tabs" v-model="tabIndex">
  <!--Дифтерия  Начало таблицы          -->
-                <b-tab title="Дифтерия">
+                <b-tab title="Дифтерия" @click="setItemsDefaultVACCINATIONS('АДСМ')">
                   <b-table striped hover
-                           :items="items"
+                           :items="itemsDEFTERIA"
                            :fields="fieldsDift">
                     <template slot="DATEPRIV" scope="data">
-                      {{data.item.DatePriv}}
+                      {{data.item.date}}
                     </template>
                     <template slot="PREPARAT" scope="data">
-                      {{data.item.Preparat}}
+                      {{data.item.preparat}}
                     </template>
-                    <template slot="PRIVIVKI" scope="data">
-                      {{data.item.Privivki}}
+                    <template slot="SERIA" scope="data">
+                      {{data.item.seria}}
                     </template>
                     <template slot="DOZA" scope="data">
-                      {{data.item.Doza}}
-                    </template>
-                    <template slot="MEDOTVOD" scope="data">
-                      {{data.item.MedOtvod}}
+                      {{data.item.doza}}
                     </template>
                   </b-table>
    <!--Дифтерия  конец таблицы          -->
-                  <b-button variant="primary" size="sm" v-b-modal.ModalDifteria>Добавить</b-button>
+                  <b-button variant="primary" size="sm" v-b-modal.ModalDifteria :disabled="this.input_find == ''">Добавить</b-button>
                   <b-modal id="ModalDifteria"
                      title="Добавить прививку от дефтерии "
                            @ok="addPrivivkaDEFTERIA">
@@ -96,7 +93,6 @@
                 </b-tab>
               </b-tabs>
             </b-card>
-
           </b-col>
 
         </b-row>
@@ -149,10 +145,8 @@ export default {
       fieldsDift: [
         {key: 'DATEPRIV', label: 'Дата прививки', class: 'text-justify col-xs-8'},
         {key: 'PREPARAT', label: 'Препарат', class: 'text-justify'},
-        {key: 'PRIVIVKI', label: 'Прививки', class: 'text-center'},
         {key: 'SERIA', label: 'Серия', class: 'text-justify'},
-        {key: 'DOZA', label: 'Доза', class: 'text-center'},
-        {key: 'MEDOTVOD', label: 'Медотвод', class: 'text-center'}]
+        {key: 'DOZA', label: 'Доза', class: 'text-center'}]
     }
   },
   mounted: function () {
@@ -162,12 +156,13 @@ export default {
     logout: function () {
       Auth.logout()
     },
-    currentTab: function (idx) {
-      this.setItemsDefaultVACCINATIONS(idx)
-    },
-    setItemsDefaultVACCINATIONS (idx) {
-//      controllers.setItemsDefaultVACCINATIONS(idx)
-      console.log(idx)
+    setItemsDefaultVACCINATIONS (vaccination) {
+      var ss = this
+      controllers.setItemsDefaultVACCINATIONS(vaccination, this.NumberKart).then(function (response) {
+        ss.itemsDEFTERIA = JSON.parse(JSON.stringify(response.data))
+      }).catch(function (error) {
+        console.log(error)
+      })
     },
     CurrentUser: function () {
       var ss = this
@@ -178,6 +173,7 @@ export default {
       })
     },
     addPrivivkaDEFTERIA: function () {
+      var ss = this
       controllers.addPrivika('АДСМ',
         this.selectedDateDEFTERIA,
         this.selectedPreparatDEFTERIA,
@@ -185,13 +181,15 @@ export default {
         this.selectedDozaDEFTERIA,
         this.NumberKart
       ).then(function (response) {
+        console.log(response.status)
         if (response.status === 200) {
-
+          ss.setItemsDefaultVACCINATIONS('АДСМ')
         }
         if (response.status === 404) {
 
         }
       }).catch(function (error) {
+        console.log(error.response)
         alert('Произошла ошибка, свяжитесь с системным администратором ' + error)
       })
     },
@@ -215,6 +213,7 @@ export default {
           ss.Pasport = data[0].Pasport
           ss.DateRogd = data[0].DateRogd
           ss.Pol = data[0].Pol
+          ss.setItemsDefaultVACCINATIONS('АДСМ')
         })
         .catch(function (error) {
           console.log(error)
