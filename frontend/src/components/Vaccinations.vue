@@ -35,7 +35,7 @@
  <!--Дифтерия  Начало таблицы          -->
                 <b-tab title="Дифтерия" @click="setItemsDefaultVACCINATIONS('АДСМ')">
                   <b-table striped hover
-                           :items="itemsDEFTERIA"
+                           :items="itemsVACCINATIONS"
                            :fields="fieldsDift">
                     <template slot="DATEPRIV" scope="data">
                       {{data.item.date}}
@@ -51,45 +51,99 @@
                     </template>
                   </b-table>
    <!--Дифтерия  конец таблицы          -->
-                  <b-button variant="primary" size="sm" v-b-modal.ModalDifteria :disabled="this.input_find == ''">Добавить</b-button>
-                  <b-modal id="ModalDifteria"
-                     title="Добавить прививку от дефтерии "
-                           @ok="addPrivivkaDEFTERIA">
-                    <b-container>
-                      <b-row>Дата вакцинации: <b-col align-self="center"><b-input v-model="selectedDateDEFTERIA" type="date"></b-input></b-col></b-row> <br />
-                      <b-row>
-                        <b-form-select v-model="selectedPreparatDEFTERIA" :options="optionsPreparatsDEFTERIA"></b-form-select>
-                      </b-row><br />
-                      <!--<b-row><b-input type="text" placeholder="Прививки"></b-input></b-row><br />-->
-                      <b-row>
-                        <b-form-select v-model="selectedSeriaDEFTERIA" :options="optionsSeriaDEFTERIA"></b-form-select>
-                      </b-row><br />
-                      <b-row>
-                        <b-form-select v-model="selectedDozaDEFTERIA" :options="optionsDozaDEFTERIA"></b-form-select>
-                      </b-row><br />
-                      <!--<b-row><b-input type="text" placeholder="Медотвод"></b-input></b-row>-->
-                    </b-container>
-                  </b-modal>
+
+
+
                 </b-tab>
-                <b-tab title="Кл. энцефалит" @click="currentTab(1)">
-                  I'm the second tab
-                  <b-card>I'm the card in tab</b-card>
+                  <b-tab title="Клещевой энцефалит" @click="setItemsDefaultVACCINATIONS('Клещевой энцефалит')">
+                    <b-table striped hover
+                             :items="itemsVACCINATIONS"
+                             :fields="fieldsKLESH">
+                      <template slot="DATEPRIV" scope="data">
+                        {{data.item.date}}
+                      </template>
+                      <template slot="PREPARAT" scope="data">
+                        {{data.item.preparat}}
+                      </template>
+                      <template slot="SERIA" scope="data">
+                        {{data.item.seria}}
+                      </template>
+                      <template slot="DOZA" scope="data">
+                        {{data.item.doza}}
+                      </template>
+                    </b-table>
                 </b-tab>
-                <b-tab title="Корь">
-                  I'm the second tab
-                  <b-card>I'm the card in tab</b-card>
+                <b-tab title="Корь" @click="setItemsDefaultVACCINATIONS('Корь')">
+                  <b-table striped hover
+                           :items="itemsVACCINATIONS"
+                           :fields="fieldsKLESH">
+                    <template slot="DATEPRIV" scope="data">
+                      {{data.item.date}}
+                    </template>
+                    <template slot="PREPARAT" scope="data">
+                      {{data.item.preparat}}
+                    </template>
+                    <template slot="SERIA" scope="data">
+                      {{data.item.seria}}
+                    </template>
+                    <template slot="DOZA" scope="data">
+                      {{data.item.doza}}
+                    </template>
+                  </b-table>
                 </b-tab>
-                <b-tab title="Краснуха">
-                  I'm the second tab
-                  <b-card>I'm the card in tab</b-card>
+                <b-tab title="Краснуха" @click="setItemsDefaultVACCINATIONS('Краснуха')">
+                  <b-table striped hover
+                           :items="itemsVACCINATIONS"
+                           :fields="fieldsKLESH">
+                    <template slot="DATEPRIV" scope="data">
+                      {{data.item.date}}
+                    </template>
+                    <template slot="PREPARAT" scope="data">
+                      {{data.item.preparat}}
+                    </template>
+                    <template slot="SERIA" scope="data">
+                      {{data.item.seria}}
+                    </template>
+                    <template slot="DOZA" scope="data">
+                      {{data.item.doza}}
+                    </template>
+                  </b-table>
                 </b-tab>
-                <b-tab title="Гепатит В">
-                  I'm the second tab
-                  <b-card>I'm the card in tab</b-card>
+                <b-tab title="Гепатит В" @click="setItemsDefaultVACCINATIONS('Гепатит В')">
+                  <b-table striped hover
+                           :items="itemsVACCINATIONS"
+                           :fields="fieldsKLESH">
+                    <template slot="DATEPRIV" scope="data">
+                      {{data.item.date}}
+                    </template>
+                    <template slot="PREPARAT" scope="data">
+                      {{data.item.preparat}}
+                    </template>
+                    <template slot="SERIA" scope="data">
+                      {{data.item.seria}}
+                    </template>
+                    <template slot="DOZA" scope="data">
+                      {{data.item.doza}}
+                    </template>
+                  </b-table>
                 </b-tab>
-                <b-tab title="Грипп">
-                  I'm the second tab
-                  <b-card>I'm the card in tab</b-card>
+                <b-tab title="Грипп" @click="setItemsDefaultVACCINATIONS('Грипп')">
+                  <b-table striped hover
+                           :items="itemsVACCINATIONS"
+                           :fields="fieldsKLESH">
+                    <template slot="DATEPRIV" scope="data">
+                      {{data.item.date}}
+                    </template>
+                    <template slot="PREPARAT" scope="data">
+                      {{data.item.preparat}}
+                    </template>
+                    <template slot="SERIA" scope="data">
+                      {{data.item.seria}}
+                    </template>
+                    <template slot="DOZA" scope="data">
+                      {{data.item.doza}}
+                    </template>
+                  </b-table>
                 </b-tab>
               </b-tabs>
             </b-card>
@@ -114,14 +168,15 @@ export default {
   name: 'general',
   data () {
     return {
-      itemsDEFTERIA: [],
-      selectedDateDEFTERIA: null,
-      selectedPreparatDEFTERIA: null,
-      selectedSeriaDEFTERIA: null,
-      selectedDozaDEFTERIA: null,
+      currentPrivivka: null,
+      itemsVACCINATIONS: [],
+      selectedDate: null,
+      selectedPreparat: null,
+      selectedSeria: null,
+      selectedDoza: null,
       nameUser: [],
       items: [],
-      tabIndex: 0,
+      tabIndex: null,
       input_find: '',
       NumberKart: '',
       Fio: '',
@@ -129,20 +184,20 @@ export default {
       DateRogd: '',
       Pol: '',
       selected: null,
-      optionsPreparatsDEFTERIA: [
+      optionsPreparats: [
         {value: null, text: 'наименование препарата'},
         {value: 'АДСМ', text: 'АДСМ'}
       ],
-      optionsSeriaDEFTERIA: [
+      optionsSeria: [
         {value: null, text: 'серия препарата'},
         {value: 'П7', text: 'П7'},
         {value: 'П28', text: 'П28'}
       ],
-      optionsDozaDEFTERIA: [
+      optionsDoza: [
         {value: null, text: 'доза'},
         {value: '0.5', text: '0.5'}
       ],
-      fieldsDift: [
+      fields: [
         {key: 'DATEPRIV', label: 'Дата прививки', class: 'text-justify col-xs-8'},
         {key: 'PREPARAT', label: 'Препарат', class: 'text-justify'},
         {key: 'SERIA', label: 'Серия', class: 'text-justify'},
@@ -159,7 +214,9 @@ export default {
     setItemsDefaultVACCINATIONS (vaccination) {
       var ss = this
       controllers.setItemsDefaultVACCINATIONS(vaccination, this.NumberKart).then(function (response) {
-        ss.itemsDEFTERIA = JSON.parse(JSON.stringify(response.data))
+        ss.itemsVACCINATIONS = JSON.parse(JSON.stringify(response.data))
+        ss.currentPrivivka = vaccination
+        alert(ss.currentPrivivka)
       }).catch(function (error) {
         console.log(error)
       })
@@ -172,13 +229,13 @@ export default {
         console.log(error)
       })
     },
-    addPrivivkaDEFTERIA: function () {
+    addPrivivka: function () {
       var ss = this
-      controllers.addPrivika('АДСМ',
-        this.selectedDateDEFTERIA,
-        this.selectedPreparatDEFTERIA,
-        this.selectedSeriaDEFTERIA,
-        this.selectedDozaDEFTERIA,
+      controllers.addPrivika(this.currentPrivivka,
+        this.selectedDate,
+        this.selectedPreparat,
+        this.selectedSeria,
+        this.selectedDoza,
         this.NumberKart
       ).then(function (response) {
         console.log(response.status)
