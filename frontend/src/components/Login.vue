@@ -31,7 +31,6 @@
   import BootstrapVue from 'bootstrap-vue'
   import 'bootstrap/dist/css/bootstrap.css'
   import 'bootstrap-vue/dist/bootstrap-vue.css'
-  import axios from 'axios'
 //  import router from 'vue-router'
   import {Auth} from '../router/index.js'
 
@@ -54,33 +53,6 @@
         if (Auth.errauth) {
           this.errauth = true
         }
-      },
-      startAutoUpdate: function () {
-        this.timer = setInterval(this.GetModeVrach, 600000)
-      },
-      cancelAutoUpdate: function () {
-        clearInterval(this.timer)
-      },
-      GetPatient () {
-        const data = new FormData()
-        var ss = this
-        data.append('patient', ss.input_find)
-        axios.post('http://192.168.1.76:8084/FindPatientInArena', data, {responeType: 'application/json'})
-          .then(function (response) {
-            var data = JSON.parse(JSON.stringify(response.data))
-//          ss.items = data
-//          console.log(ss.items)
-            ss.Fio = data[0].Fio
-            ss.Pasport = data[0].Pasport
-            ss.DateRogd = data[0].DateRogd
-            ss.Pol = data[0].Pol
-            console.log(ss.Fio)
-//          ss.saveJSON(ss.items)
-          })
-          .catch(function (error) {
-            console.log(error)
-//          ss.items = JSON.parse(localStorage.getItem('myObj'))
-          })
       }
     }
   }

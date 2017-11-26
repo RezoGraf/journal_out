@@ -6,6 +6,8 @@ import (
 	"../utils"
 	"fmt"
 	"log"
+	_ "github.com/lib/pq"
+	"github.com/lib/pq"
 )
 
 const programname = "vaccinations"
@@ -79,12 +81,12 @@ func ModelsGetPrivivka(type_vaccinations, numberKart string) []*ModelPrivivka {
 	getVaccinations := make([]*ModelPrivivka, 0)
 	for rows.Next() {
 		vacc := new(ModelPrivivka)
-		var date sql.NullString
+		var date pq.NullTime
 		var preparat sql.NullString
 		var seria sql.NullString
 		var doza sql.NullString
 		rows.Scan(&date, &preparat, &seria, &doza)
-		vacc.Date = date.String
+		vacc.Date = utils.FormatDatePqNullTime(date)
 		vacc.Preparat = preparat.String
 		vacc.Doza = doza.String
 		vacc.Seria = seria.String
@@ -116,7 +118,7 @@ func ModelsGetPatientOfArena(number_cart string) ([]*ModePatientFindOfArena) {
 	query := `select fam || ' ' || im || ' ' || OT as fio , pasp, DR, SEX, uid from patient where UID = ?`
 	var Fio sql.NullString
 	var Pasport sql.NullString
-	var DateRogd sql.NullString
+	var DateRogd pq.NullTime
 	var Pol sql.NullString
 	var Uid sql.NullString
 
@@ -132,7 +134,7 @@ func ModelsGetPatientOfArena(number_cart string) ([]*ModePatientFindOfArena) {
 		rows.Scan(&Fio, &Pasport, &DateRogd, &Pol, &Uid)
 		bk.Fio = Fio.String
 		bk.Pasport = Pasport.String
-		bk.DateRogd = utils.Cut(DateRogd.String, 0, 10)
+		bk.DateRogd = utils.FormatDatePqNullTime(DateRogd)
 		bk.Pol = Pol.String
 		bk.Uid = Uid.String
 
